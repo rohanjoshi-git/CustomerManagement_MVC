@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using CustomerManagement.Models;
 using CustomerManagement.Dal;
+using CustomerManagement.ViewModel;
 
 namespace CustomerManagement.Controllers
 {
@@ -24,7 +25,18 @@ namespace CustomerManagement.Controllers
         }
         public ActionResult Enter()
         {
-            return View("EnterCustomer", new Customer());
+            //return View("EnterCustomer", new Customer());
+
+            // View Model object
+            CustomerViewModel obj = new CustomerViewModel();
+            // single object is fresh
+            obj.customer = new Customer(); // initially empty
+            // fill the customers collections
+            CustomerDal dal = new CustomerDal();
+            List<Customer> customersColl = dal.Customers.ToList<Customer>();
+            obj.customers = customersColl;
+
+            return View("EnterCustomer", obj);
         }
         public ActionResult Submit(Customer obj) // validation runs
         {
@@ -36,13 +48,10 @@ namespace CustomerManagement.Controllers
                 Dal.Customers.Add(obj); // in memory
                 Dal.SaveChanges(); // physical commit
 
-                return View("Customer", obj);
-            }
-            else
-            {
-                return View("EnterCustomer",obj);
+                //return View("Customer", obj);
             }
             
+                return View("EnterCustomer",obj);            
         }
     }
 }
