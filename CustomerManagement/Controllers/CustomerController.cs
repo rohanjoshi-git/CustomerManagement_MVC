@@ -12,7 +12,7 @@ namespace CustomerManagement.Controllers
     public class CustomerController : Controller
     {
         // GET: Customer
-        public ActionResult Load()
+        public ActionResult Load() // Connecting via browser HTML
         {
             Customer obj = 
                 new Customer 
@@ -21,8 +21,29 @@ namespace CustomerManagement.Controllers
                         CustomerName = "Shiv" 
                     };
 
-            return View("Customer",obj);
+            if(Request.QueryString["Type"] == "JSON")
+            {
+                return Json(obj, JsonRequestBehavior.AllowGet);
+            }
+            else
+            {
+                return View("Customer", obj);
+            }
+            
         }
+
+        public JsonResult LoadJSON()  // Connecting via JavaScript (not reqd a seperate action)
+        {
+            Customer obj =
+                new Customer
+                {
+                    CustomerCode = "1001",
+                    CustomerName = "Shiv"
+                };
+
+            return Json(obj, JsonRequestBehavior.AllowGet);
+        }
+
         public ActionResult Enter()
         {
             //return View("EnterCustomer", new Customer());
