@@ -162,6 +162,8 @@
     <Content Include="Views\Shared\GotoHome.cshtml" />
     <Content Include="Views\Customer\Customer.cshtml" />
     <Content Include="Views\Customer\EnterCustomer.cshtml" />
+    <Content Include="Views\Customer\SearchCustomer.cshtml" />
+    <Content Include="Views\Customer\DisplayCustomers.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

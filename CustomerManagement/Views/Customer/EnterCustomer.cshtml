@@ -29,19 +29,7 @@
         }
       <br />
         
-        <table>
-            <tr>
-                <td>Customer Code</td>
-                <td>Customer Name</td>
-            </tr>
-            @foreach (Customer o in Model.customers)
-            {
-                <tr>
-                    <td>@o.CustomerCode</td>
-                    <td>@o.CustomerName</td>
-                </tr>
-            }
-        </table>
+        @Html.Partial("DisplayCustomers", Model)  @*same model will be passed to the view*@
 
     </div>
 </body>

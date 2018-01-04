@@ -1,0 +1,21 @@
+﻿@model CustomerManagement.ViewModel.CustomerViewModel
+@using CustomerManagement.Models  @*import namespace*@
+
+@*<table>
+    <tr>
+        <td>Customer Code</td>
+        <td>Customer Name</td>
+    </tr>
+    @foreach (Customer o in Model.customers)
+            {
+        <tr>
+            <td>@o.CustomerCode</td>
+            <td>@o.CustomerName</td>
+        </tr>
+    }
+</table>*@
+
+@{ 
+    WebGrid objWebGrid = new WebGrid(Model.customers);
+}
+@objWebGrid.GetHtml();
