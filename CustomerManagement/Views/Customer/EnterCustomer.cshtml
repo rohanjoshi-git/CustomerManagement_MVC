@@ -15,21 +15,66 @@
 <script src="~/Scripts/jquery.validate.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 <body>
-    <div> 
-       
-        @using (Html.BeginForm("Submit", "Customer", FormMethod.Post))
-        {
-            
-        <i>Customer Name</i> @Html.TextBoxFor( m => m.customer.CustomerName) <br />
-            @Html.ValidationMessageFor(x => x.customer.CustomerName)<br />
-        <i> Customer Code </i> @Html.TextBoxFor(m => m.customer.CustomerCode)<br />
-            @Html.ValidationMessageFor(x => x.customer.CustomerCode)<br />
-            <input id="Submit1" type="submit" value="submit" />
-            //@Html.ValidationSummary();
-        }
-      <br />
+    <div>
+
         
-        @Html.Partial("DisplayCustomers", Model)  @*same model will be passed to the view*@
+        @*@using (Html.BeginForm("Submit", "Customer", FormMethod.Post))*@ @*removed to avoid full postback*@
+        
+        <form id="frm1">
+            <i>Customer Name</i> @Html.TextBoxFor(m => m.customer.CustomerName) <br />
+            @Html.ValidationMessageFor(x => x.customer.CustomerName)<br />
+            <i> Customer Code </i> @Html.TextBoxFor(m => m.customer.CustomerCode)<br />
+            @Html.ValidationMessageFor(x => x.customer.CustomerCode)<br />
+        </form>
+            <input id="btn" type="button" value="Add Customer" onclick="SendData()"/>  @*type="submit" --> full postback*@
+            @*//@Html.ValidationSummary();*@
+        
+        <br />
+
+        @*Server side code*@
+        @*@Html.Partial("DisplayCustomers", Model)*@  @*same model will be passed to the view*@
+
+        <div id="status"></div>
+        
+        <table id="tbl">
+            <tr>
+                <td>Customer Code</td>
+                <td>Customer Name</td>
+            </tr>
+        </table>
+        <script language="javascript">
+            $("#status").text("Loading...");
+            $.get("getCustomers", null, BindData);
+            function BindData(Customers)
+            {
+                var tbl = $("#tbl"); // get reference of the table
+                // For loop
+                for (var j = 0; j < Customers.length; j++)
+                {
+                    var newRow = "<tr>" +
+                "<td>" + Customers[j].CustomerCode + "</td>" +
+                "<td>" + Customers[j].CustomerName + "</td>" +
+            "</tr>";
+
+                    tbl.append(newRow);
+                }
+                $("#status").text("");
+            }
+            
+            function SendData()
+            {
+                $("#status").text("Adding to database. Please wait...");
+                // post call to the MVC Controller
+                // 1. get reference of form, 2. Serialize 
+                var frm = $("#frm1").serialize();
+                $.post("Submit", frm, BindData);
+
+                // set Customer Code and Customer Name text boxes to blank
+                $("#customer_CustomerName").val("");
+                $("#customer_CustomerCode").val("");
+            }
+
+        </script>
 
     </div>
 </body>

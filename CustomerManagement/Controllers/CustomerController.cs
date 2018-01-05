@@ -6,6 +6,7 @@ using System.Web.Mvc;
 using CustomerManagement.Models;
 using CustomerManagement.Dal;
 using CustomerManagement.ViewModel;
+using System.Threading;
 
 namespace CustomerManagement.Controllers
 {
@@ -52,10 +53,8 @@ namespace CustomerManagement.Controllers
             CustomerViewModel obj = new CustomerViewModel();
             // single object is fresh
             obj.customer = new Customer(); // initially empty
-            // fill the customers collections
-            CustomerDal dal = new CustomerDal();
-            List<Customer> customersColl = dal.Customers.ToList<Customer>();
-            obj.customers = customersColl;
+
+            // fill the customers collections - Removed as it will happen in getCustomers
 
             return View("EnterCustomer", obj);
         }
@@ -66,6 +65,18 @@ namespace CustomerManagement.Controllers
             CustomerViewModel obj = new CustomerViewModel();
             obj.customers = new List<Customer>();
             return View("SearchCustomer", obj);
+        }
+
+        public ActionResult getCustomers() // JSON Collection
+        {
+            // fill the customers collections
+            CustomerDal dal = new CustomerDal();
+            List<Customer> customersColl = dal.Customers.ToList<Customer>();
+
+            // Delay for Synchronous execution (10sec)
+            Thread.Sleep(10000);
+
+            return Json(customersColl, JsonRequestBehavior.AllowGet);
         }
 
         public ActionResult SearchCustomer()
@@ -93,8 +104,6 @@ namespace CustomerManagement.Controllers
         public ActionResult Submit() // validation runs
         {
 
-            CustomerViewModel vm = new CustomerViewModel();
-
             // manual binding of object with form elements
             Customer obj = new Customer();
             obj.CustomerName = Request.Form["customer.CustomerName"];
@@ -107,20 +116,16 @@ namespace CustomerManagement.Controllers
                 CustomerDal Dal = new CustomerDal();
                 Dal.Customers.Add(obj); // in memory
                 Dal.SaveChanges(); // physical commit
-                vm.customer = new Customer(); // to refresh the view with new emply object
 
                 //return View("Customer", obj);
             }
-            else
-            {
-                vm.customer = obj;  // if the object is not valid, persist the object and show it to user
-            }
+            
             // fill the customers collections
             CustomerDal dal = new CustomerDal();
             List<Customer> customersColl = dal.Customers.ToList<Customer>();
-            vm.customers = customersColl;
 
-            return View("EnterCustomer",vm);            
+            //return View("EnterCustomer",vm);    // removed as JSON will be sent 
+            return Json(customersColl, JsonRequestBehavior.AllowGet);        
         }
     }
 }
