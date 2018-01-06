@@ -74,7 +74,7 @@ namespace CustomerManagement.Controllers
             List<Customer> customersColl = dal.Customers.ToList<Customer>();
 
             // Delay for Synchronous execution (10sec)
-            Thread.Sleep(10000);
+            Thread.Sleep(3000);
 
             return Json(customersColl, JsonRequestBehavior.AllowGet);
         }
