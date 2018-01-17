@@ -10,6 +10,7 @@ using System.Threading;
 
 namespace CustomerManagement.Controllers
 {
+    [Authorize]
     public class CustomerController : Controller
     {
         // GET: Customer
@@ -70,7 +71,7 @@ namespace CustomerManagement.Controllers
         public ActionResult getCustomers() // JSON Collection
         {
             // fill the customers collections
-            CustomerDal dal = new CustomerDal();
+            Dal.Dal dal = new Dal.Dal();
             List<Customer> customersColl = dal.Customers.ToList<Customer>();
 
             // Delay for Synchronous execution (10sec)
@@ -85,7 +86,7 @@ namespace CustomerManagement.Controllers
             CustomerViewModel obj = new CustomerViewModel();
 
             // fill the customers collections
-            CustomerDal dal = new CustomerDal();
+            Dal.Dal dal = new Dal.Dal();
             // to fill all customers
             // List<Customer> customersColl = dal.Customers.ToList<Customer>();
 
@@ -113,15 +114,15 @@ namespace CustomerManagement.Controllers
             {
                 // insert the Customer object to database
                 // EF DAL
-                CustomerDal Dal = new CustomerDal();
+                Dal.Dal Dal = new Dal.Dal();
                 Dal.Customers.Add(obj); // in memory
                 Dal.SaveChanges(); // physical commit
 
                 //return View("Customer", obj);
             }
-            
+
             // fill the customers collections
-            CustomerDal dal = new CustomerDal();
+            Dal.Dal dal = new Dal.Dal();
             List<Customer> customersColl = dal.Customers.ToList<Customer>();
 
             //return View("EnterCustomer",vm);    // removed as JSON will be sent 

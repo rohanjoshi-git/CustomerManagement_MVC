@@ -6,6 +6,7 @@ using System.Web.Mvc;
 
 namespace CustomerManagement.Controllers
 {
+    [Authorize]
     public class HomeController : Controller
     {
         
