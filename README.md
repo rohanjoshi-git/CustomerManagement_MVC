@@ -6,6 +6,6 @@ Functionality:
 
 
 Technologies:
--MVC
--Entity Framework
--LINQ
+- MVC
+- Entity Framework
+- LINQ
