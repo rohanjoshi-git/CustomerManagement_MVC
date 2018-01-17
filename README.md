@@ -3,9 +3,12 @@ MVC 5
 
 Functionality:
 - Navigation
+- Authentication
+- Store auth info in cookies
 
 
-Technologies:
+Technical specs:
 - MVC
 - Entity Framework
 - LINQ
+- Forms Authentication
