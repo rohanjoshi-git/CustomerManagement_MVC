@@ -14,68 +14,176 @@
 <script src="~/Scripts/jquery-1.10.2.js"></script>
 <script src="~/Scripts/jquery.validate.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
-<body>
+<script src="~/Scripts/angular.js"></script>
+
+<script language="javascript">
+
+    // class
+    function CustomerViewModel($scope, $http)  // $scope --> for scope management, $http --> --> to make a call to server
+    {
+        // properties
+        $scope.Customer =
+            {
+                "CustomerCode": "",
+                "CustomerName": "",
+                "CustomerAmount": "",
+                "CustomerAmountColor": ""
+            };
+
+        $scope.Customers = {};
+
+        $scope.$watch("Customers", function () {
+            for (var x = 0; x < $scope.Customers.length; x++) {
+
+                var cust = $scope.Customers[x];
+                cust.CustomerAmountColor = $scope.getColor(cust.CustomerAmount);
+            }
+        })
+
+        // function
+        $scope.getColor = function (Amount) {
+            if (Amount == 0) {
+                return "";
+            }
+
+            if (Amount > 100) {
+                return "Blue";
+            }
+
+            else {
+                return "Red";
+            }
+        }
+
+        $scope.$watch("Customer.CustomerAmount", function () {
+            $scope.Customer.CustomerAmountColor = $scope.getColor($scope.Customer.CustomerAmount);
+        });
+
+        // make a call to server to insert data
+        $scope.Add = function () {
+            $http({ method: "POST", data: $scope.Customer, url: "Submit" }).then(function (successData, status, headers, config) {
+                // Load the collection of Customer
+                $scope.Customers = successData.data;
+
+                // Clear text boxes
+                $scope.Customer =
+                    {
+                        "CustomerCode": "",
+                        "CustomerName": "",
+                        "CustomerAmount": "",
+                        "CustomerAmountColor": ""
+                    };
+            });
+        }
+
+        // Load Cutomer data
+        $scope.Load = function () {
+            $http({ method: "GET", url: "getCustomers" }).then(function (successData, status, headers, config) {
+                // Load the collection of Customer
+                $scope.Customers = successData.data;
+
+            });
+        }
+
+        // call function to load Customer data
+        $scope.Load();
+
+    }
+    // App
+    var app = angular.module("myApp", []); // Creating an App
+
+    // Controller
+    app.controller("CustomerViewModel", CustomerViewModel); // Registering the VM
+</script>
+
+<body ng-app="myApp">
     <a href="/Home/Index"> Home </a>
     <br />
     <div>
-                
+
         @*@using (Html.BeginForm("Submit", "Customer", FormMethod.Post))*@ @*removed to avoid full postback*@
-        
-        <form id="frm1">
-            <i>Customer Name</i> @Html.TextBoxFor(m => m.customer.CustomerName) <br />
-            @Html.ValidationMessageFor(x => x.customer.CustomerName)<br />
-            <i> Customer Code </i> @Html.TextBoxFor(m => m.customer.CustomerCode)<br />
-            @Html.ValidationMessageFor(x => x.customer.CustomerCode)<br />
-        </form>
-            <input id="btn" type="button" value="Add Customer" onclick="SendData()"/>  @*type="submit" --> full postback*@
-            @*//@Html.ValidationSummary();*@
-        
-        <br />
 
-        @*Server side code*@
-        @*@Html.Partial("DisplayCustomers", Model)*@  @*same model will be passed to the view*@
+        <div ng-controller="CustomerViewModel">
+            <form id="frm1">
+                @* Start- using HTML helper classes*@
+                @*<i>Customer Name</i> @Html.TextBoxFor(m => m.customer.CustomerName) <br />
+                    @Html.ValidationMessageFor(x => x.customer.CustomerName)<br />
+                    <i> Customer Code </i> @Html.TextBoxFor(m => m.customer.CustomerCode)<br />
+                    @Html.ValidationMessageFor(x => x.customer.CustomerCode)<br />*@
+                @* End- using HTML helper classes*@
 
-        <div id="status"></div>
-        
-        <table id="tbl">
-            <tr>
-                <td>Customer Code</td>
-                <td>Customer Name</td>
-            </tr>
-        </table>
-        <script language="javascript">
-            $("#status").text("Loading...");
-            $.get("getCustomers", null, BindData);
-            function BindData(Customers)
-            {
-                var tbl = $("#tbl"); // get reference of the table
-                // For loop
-                for (var j = 0; j < Customers.length; j++)
-                {
-                    var newRow = "<tr>" +
-                "<td>" + Customers[j].CustomerCode + "</td>" +
-                "<td>" + Customers[j].CustomerName + "</td>" +
-            "</tr>";
+                <i>Customer Name</i> <input id="CustomerName" ng-model="Customer.CustomerName" type="text" name="customer.CustomerName" />
+                <br />
+                @Html.ValidationMessageFor(x => x.customer.CustomerName)
+                <br />
 
-                    tbl.append(newRow);
+                <i> Customer Code </i> <input id="CustomerCode" ng-model="Customer.CustomerCode" type="text" name="customer.CustomerCode" />
+                <br />
+                @Html.ValidationMessageFor(x => x.customer.CustomerCode)
+                <br />
+
+                <i> Customer Amount </i> <input id="CustomerAmount" ng-model="Customer.CustomerAmount"
+                                                style="background-color: {{Customer.CustomerAmountColor}}"
+                                                type="text" name="customer.CustomerAmount" />
+                <br />
+
+            </form>
+            <input id="btn" type="button" value="Add Customer" @*onclick="SendData()*@ " ng-click="Add()" />  @*type="submit" --> full postback*@
+            @*@Html.ValidationSummary();*@
+
+            <br />
+
+            @*Server side code*@
+            @*@Html.Partial("DisplayCustomers", Model)*@  @*same model will be passed to the view*@
+
+            @*<div id="status"></div>*@
+            <div id="tblOutput" ng-show="Customers.length > 0">
+                <table id="tbl">
+                    <tr>
+                        <td>Customer Code</td>
+                        <td>Customer Name</td>
+                        <td>Customer Amount</td>
+                    </tr>
+                    <tr ng-repeat="cust in Customers">
+                        <td>{{cust.CustomerCode}}</td>
+                        <td>{{cust.CustomerName}}</td>
+                        <td style="background-color:  {{cust.CustomerAmountColor}}">{{cust.CustomerAmount}}</td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        @*populate table using $.get (No Angular)*@
+        @*<script language="javascript">
+                $("#status").text("Loading...");
+                $.get("getCustomers", null, BindData);
+                function BindData(Customers) {
+                    var tbl = $("#tbl"); // get reference of the table
+                    // For loop
+                    for (var j = 0; j < Customers.length; j++) {
+                        var newRow = "<tr>" +
+                            "<td>" + Customers[j].CustomerCode + "</td>" +
+                            "<td>" + Customers[j].CustomerName + "</td>" +
+                            "</tr>";
+
+                        tbl.append(newRow);
+                    }
+                    $("#status").text("");
                 }
-                $("#status").text("");
-            }
-            
-            function SendData()
-            {
-                $("#status").text("Adding to database. Please wait...");
-                // post call to the MVC Controller
-                // 1. get reference of form, 2. Serialize 
-                var frm = $("#frm1").serialize();
-                $.post("Submit", frm, BindData);
 
-                // set Customer Code and Customer Name text boxes to blank
-                $("#customer_CustomerName").val("");
-                $("#customer_CustomerCode").val("");
-            }
+                function SendData() {
+                    $("#status").text("Adding to database. Please wait...");
+                    // post call to the MVC Controller
+                    // 1. get reference of form, 2. Serialize
+                    var frm = $("#frm1").serialize();
+                    $.post("Submit", frm, BindData);
 
-        </script>
+                    // set Customer Code and Customer Name text boxes to blank
+                    $("#customer_CustomerName").val("");
+                    $("#customer_CustomerCode").val("");
+                }
+
+            </script>*@
 
     </div>
 </body>

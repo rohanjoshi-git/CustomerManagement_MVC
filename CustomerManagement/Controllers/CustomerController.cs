@@ -16,14 +16,14 @@ namespace CustomerManagement.Controllers
         // GET: Customer
         public ActionResult Load() // Connecting via browser HTML
         {
-            Customer obj = 
-                new Customer 
-                    { 
-                        CustomerCode = "1001",
-                        CustomerName = "Shiv" 
-                    };
+            Customer obj =
+                new Customer
+                {
+                    CustomerCode = "1001",
+                    CustomerName = "Shiv"
+                };
 
-            if(Request.QueryString["Type"] == "JSON")
+            if (Request.QueryString["Type"] == "JSON")
             {
                 return Json(obj, JsonRequestBehavior.AllowGet);
             }
@@ -31,7 +31,7 @@ namespace CustomerManagement.Controllers
             {
                 return View("Customer", obj);
             }
-            
+
         }
 
         public JsonResult LoadJSON()  // Connecting via JavaScript (not reqd a seperate action)
@@ -102,13 +102,15 @@ namespace CustomerManagement.Controllers
             return View("SearchCustomer", obj);
         }
 
-        public ActionResult Submit() // validation runs
+        public ActionResult Submit(Customer obj) // validation runs
         {
 
-            // manual binding of object with form elements
-            Customer obj = new Customer();
-            obj.CustomerName = Request.Form["customer.CustomerName"];
-            obj.CustomerCode = Request.Form["customer.CustomerCode"];
+            //// no need - as JSON object is being passed from front end
+            //// manual binding of object with form elements
+            //Customer obj = new Customer();
+            //obj.CustomerName = Request.Form["customer.CustomerName"];
+            //obj.CustomerCode = Request.Form["customer.CustomerCode"];
+            //// no need - end
 
             if (ModelState.IsValid)
             {
@@ -126,7 +128,7 @@ namespace CustomerManagement.Controllers
             List<Customer> customersColl = dal.Customers.ToList<Customer>();
 
             //return View("EnterCustomer",vm);    // removed as JSON will be sent 
-            return Json(customersColl, JsonRequestBehavior.AllowGet);        
+            return Json(customersColl, JsonRequestBehavior.AllowGet);
         }
     }
 }

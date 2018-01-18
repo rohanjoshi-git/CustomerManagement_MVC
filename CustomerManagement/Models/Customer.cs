@@ -15,5 +15,7 @@ namespace CustomerManagement.Models
         [Required]
         [StringLength(10)]
         public string CustomerName { get; set; }
+
+        public decimal CustomerAmount { get; set; }
     }
 }
