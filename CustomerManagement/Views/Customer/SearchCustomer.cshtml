@@ -6,25 +6,38 @@
 }
 
 <!DOCTYPE html>
+<script src="~/Scripts/angular.min.js"></script>
+<script src="~/Scripts/Customer.js"></script>
 
+
+<script language="javascript">
+
+    // App
+    var app = angular.module("myApp", []); // Creating an App
+
+    // Controller
+    app.controller("CustomerViewModel", CustomerViewModel); // Registering the VM
+</script>
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>SearchCustomer</title>
 </head>
-<body>
+<body ng-app="myApp">
     <a href="/Home/Index"> Home </a><br />
-    <div> 
-        <form action="SearchCustomer" method="post">
-            @*name will be snt to server side*@
-            Enter Customer Name : <input name="txtCustomerName" id="Text1" type="text" />
-            <br />
-            <input id="Submit1" type="submit" value="Search Customer" />
-        </form>
+    <div ng-controller="CustomerViewModel">
+        @*<form action="SearchCustomer" method="post">*@ @*full postback not required*@
+        @*name will be snt to server side*@
+        Enter Customer Name : <input ng-model="Customer.CustomerName" name="txtCustomerName" id="Text1" type="text" />
+        <br />
+        <input id="Submit1" type="button" value="Search Customer" ng-click="LoadByName()" />
+        @*</form>*@ @*full postback not required*@
+        @Html.Partial("DisplayCustomers", Model)  @*same model will be passed to DisplayCustomers view so that it could access all properties,
+                                                      should be in the scope of ng-controller*@
     </div>
     <br />
-    
-    @Html.Partial("DisplayCustomers", Model)  @*same model will be passed to the view*@
+
+
 
 </body>
 </html>

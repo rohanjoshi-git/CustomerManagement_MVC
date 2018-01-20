@@ -15,80 +15,10 @@
 <script src="~/Scripts/jquery.validate.js"></script>
 <script src="~/Scripts/jquery.validate.unobtrusive.js"></script>
 <script src="~/Scripts/angular.js"></script>
+<script src="~/Scripts/Customer.js"></script>  @*class CustomerViewModel*@
 
 <script language="javascript">
 
-    // class
-    function CustomerViewModel($scope, $http)  // $scope --> for scope management, $http --> --> to make a call to server
-    {
-        // properties
-        $scope.Customer =
-            {
-                "CustomerCode": "",
-                "CustomerName": "",
-                "CustomerAmount": "",
-                "CustomerAmountColor": ""
-            };
-
-        $scope.Customers = {};
-
-        $scope.$watch("Customers", function () {
-            for (var x = 0; x < $scope.Customers.length; x++) {
-
-                var cust = $scope.Customers[x];
-                cust.CustomerAmountColor = $scope.getColor(cust.CustomerAmount);
-            }
-        })
-
-        // function
-        $scope.getColor = function (Amount) {
-            if (Amount == 0) {
-                return "";
-            }
-
-            if (Amount > 100) {
-                return "Blue";
-            }
-
-            else {
-                return "Red";
-            }
-        }
-
-        $scope.$watch("Customer.CustomerAmount", function () {
-            $scope.Customer.CustomerAmountColor = $scope.getColor($scope.Customer.CustomerAmount);
-        });
-
-        // make a call to server to insert data
-        $scope.Add = function () {
-            $http({ method: "POST", data: $scope.Customer, url: "Submit" }).then(function (successData, status, headers, config) {
-                // Load the collection of Customer
-                $scope.Customers = successData.data;
-
-                // Clear text boxes
-                $scope.Customer =
-                    {
-                        "CustomerCode": "",
-                        "CustomerName": "",
-                        "CustomerAmount": "",
-                        "CustomerAmountColor": ""
-                    };
-            });
-        }
-
-        // Load Cutomer data
-        $scope.Load = function () {
-            $http({ method: "GET", url: "getCustomers" }).then(function (successData, status, headers, config) {
-                // Load the collection of Customer
-                $scope.Customers = successData.data;
-
-            });
-        }
-
-        // call function to load Customer data
-        $scope.Load();
-
-    }
     // App
     var app = angular.module("myApp", []); // Creating an App
 

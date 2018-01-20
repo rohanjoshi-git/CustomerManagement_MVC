@@ -2,20 +2,37 @@
 @using CustomerManagement.Models  @*import namespace*@
 
 @*<table>
-    <tr>
-        <td>Customer Code</td>
-        <td>Customer Name</td>
-    </tr>
-    @foreach (Customer o in Model.customers)
-            {
         <tr>
-            <td>@o.CustomerCode</td>
-            <td>@o.CustomerName</td>
+            <td>Customer Code</td>
+            <td>Customer Name</td>
         </tr>
-    }
-</table>*@
+        @foreach (Customer o in Model.customers)
+                {
+            <tr>
+                <td>@o.CustomerCode</td>
+                <td>@o.CustomerName</td>
+            </tr>
+        }
+    </table>*@
 
-@{ 
-    WebGrid objWebGrid = new WebGrid(Model.customers);
-}
-@objWebGrid.GetHtml()
+@*using WebGrid*@
+@*@{
+        WebGrid objWebGrid = new WebGrid(Model.customers);
+    }
+    @objWebGrid.GetHtml()*@
+@*end - using WebGrid*@
+
+<div id="tblOutput" ng-show="Customers.length > 0">
+    <table id="tbl">
+        <tr>
+            <td>Customer Code</td>
+            <td>Customer Name</td>
+            <td>Customer Amount</td>
+        </tr>
+        <tr ng-repeat="cust in Customers">
+            <td>{{cust.CustomerCode}}</td>
+            <td>{{cust.CustomerName}}</td>
+            <td style="background-color:  {{cust.CustomerAmountColor}}">{{cust.CustomerAmount}}</td>
+        </tr>
+    </table>
+</div>

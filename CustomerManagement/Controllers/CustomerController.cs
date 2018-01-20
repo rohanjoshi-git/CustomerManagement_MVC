@@ -68,6 +68,7 @@ namespace CustomerManagement.Controllers
             return View("SearchCustomer", obj);
         }
 
+        // returns all customers
         public ActionResult getCustomers() // JSON Collection
         {
             // fill the customers collections
@@ -75,11 +76,30 @@ namespace CustomerManagement.Controllers
             List<Customer> customersColl = dal.Customers.ToList<Customer>();
 
             // Delay for Synchronous execution (10sec)
-            Thread.Sleep(3000);
+            //Thread.Sleep(3000);
 
             return Json(customersColl, JsonRequestBehavior.AllowGet);
         }
 
+        // returns the Customer for entered Customor Name
+        [ActionName("getCustomerByName")]
+        public ActionResult getCustomers(Customer objCustomer) // JSON Collection
+        {
+            // fill the customers collections
+            Dal.Dal dal = new Dal.Dal();
+            List<Customer> customersColl = (from c in dal.Customers
+                                            where c.CustomerName == objCustomer.CustomerName
+                                            select c).ToList<Customer>();
+
+            // Delay for Synchronous execution (10sec)
+           // Thread.Sleep(3000);
+
+            return Json(customersColl, JsonRequestBehavior.AllowGet);
+        }
+
+
+        // return the Customer for entered Customor Name
+        // returns View - SearchCustomer
         public ActionResult SearchCustomer()
         {
             // View Model object
