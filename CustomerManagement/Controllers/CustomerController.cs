@@ -11,7 +11,7 @@ using System.Threading;
 namespace CustomerManagement.Controllers
 {
     [Authorize]
-    public class CustomerController : Controller
+    public class CustomerUIController : Controller
     {
         // GET: Customer
         public ActionResult Load() // Connecting via browser HTML
@@ -68,6 +68,8 @@ namespace CustomerManagement.Controllers
             return View("SearchCustomer", obj);
         }
 
+        
+        /* commented methods which send JSON data
         // returns all customers
         public ActionResult getCustomers() // JSON Collection
         {
@@ -122,6 +124,8 @@ namespace CustomerManagement.Controllers
             return View("SearchCustomer", obj);
         }
 
+        */
+
         public ActionResult Submit(Customer obj) // validation runs
         {
 
@@ -149,6 +153,16 @@ namespace CustomerManagement.Controllers
 
             //return View("EnterCustomer",vm);    // removed as JSON will be sent 
             return Json(customersColl, JsonRequestBehavior.AllowGet);
+        }
+
+        public ActionResult EnterCustomer()
+        {
+            return View();
+        }
+
+        public ActionResult SearchCustomer()
+        {
+            return View();
         }
     }
 }

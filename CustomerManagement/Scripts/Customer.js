@@ -39,9 +39,10 @@ function CustomerViewModel($scope, $http)  // $scope --> for scope management, $
         $scope.Customer.CustomerAmountColor = $scope.getColor($scope.Customer.CustomerAmount);
     });
 
-    // make a call to server to insert data
+    // Add new Customer
     $scope.Add = function () {
-        $http({ method: "POST", data: $scope.Customer, url: "Submit" }).then(function (successData, status, headers, config) {
+        // make a call to server to insert data
+        $http({ method: "POST", data: $scope.Customer, url: "/Api/Customer" /*"Submit"*/ }).then(function (successData, status, headers, config) {
             // Load the collection of Customer
             $scope.Customers = successData.data;
 
@@ -58,7 +59,7 @@ function CustomerViewModel($scope, $http)  // $scope --> for scope management, $
 
     // Load Cutomer data for all customers
     $scope.Load = function () {
-        $http({ method: "GET", url: "getCustomers" }).then(function (successData, status, headers, config) {
+        $http({ method: "GET", url: "/Api/Customer" /*"getCustomers"*/ }).then(function (successData, status, headers, config) {
             // Load the collection of Customer
             $scope.Customers = successData.data;
         });
@@ -67,9 +68,9 @@ function CustomerViewModel($scope, $http)  // $scope --> for scope management, $
     // Load Cutomer data for the entered Customer Name
     $scope.LoadByName = function () {
 
-        var objCustomer = $scope.Customer;
+        //var objCustomer = $scope.Customer;  // no need to pass object as data is being sent by QueryString
 
-        $http({ method: "GET", params: objCustomer, url: "getCustomerByName" }).then(function (successData, status, headers, config) {
+        $http({ method: "GET", /*params: objCustomer,*/ url: "/Api/Customer?CustomerName=" + $scope.Customer.CustomerName /*"getCustomerByName"*/ }).then(function (successData, status, headers, config) {
             // Load the collection of Customer
             $scope.Customers = successData.data;
         });
