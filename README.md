@@ -9,6 +9,7 @@ Functionality:
 - Separate JS file to get data for all customers or a single customer (Code reusability using AngularJS)
 - Content negotiation using Customer WebAPI
 - Exception Handling at global level
+- Select, Update and Delete customers using Web API
 
 
 Technical specs:
