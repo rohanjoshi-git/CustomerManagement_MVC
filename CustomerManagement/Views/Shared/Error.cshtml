@@ -1,0 +1,20 @@
+﻿@model HandleErrorInfo
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Error</title>
+</head>
+<body>
+    <div>
+        Error occured. Contact System Admin.
+        <br />
+        Error Message: @Model.Exception.Message
+    </div>
+</body>
+</html>

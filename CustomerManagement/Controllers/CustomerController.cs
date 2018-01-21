@@ -160,6 +160,7 @@ namespace CustomerManagement.Controllers
             return View();
         }
 
+        //[HandleError]  // will return error.cshtml if error occurs // handled at global.aspx
         public ActionResult SearchCustomer()
         {
             return View();
