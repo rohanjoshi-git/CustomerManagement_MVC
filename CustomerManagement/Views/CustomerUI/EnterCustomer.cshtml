@@ -37,9 +37,9 @@
             <form id="frm1">
                 @* Start- using HTML helper classes*@
                 @*<i>Customer Name</i> @Html.TextBoxFor(m => m.customer.CustomerName) <br />
-                    @Html.ValidationMessageFor(x => x.customer.CustomerName)<br />
-                    <i> Customer Code </i> @Html.TextBoxFor(m => m.customer.CustomerCode)<br />
-                    @Html.ValidationMessageFor(x => x.customer.CustomerCode)<br />*@
+        @Html.ValidationMessageFor(x => x.customer.CustomerName)<br />
+        <i> Customer Code </i> @Html.TextBoxFor(m => m.customer.CustomerCode)<br />
+        @Html.ValidationMessageFor(x => x.customer.CustomerCode)<br />*@
                 @* End- using HTML helper classes*@
 
                 <i>Customer Name</i> <input id="CustomerName" ng-model="Customer.CustomerName" type="text" name="customer.CustomerName" />
@@ -56,9 +56,12 @@
                                                 style="background-color: {{Customer.CustomerAmountColor}}"
                                                 type="text" name="customer.CustomerAmount" />
                 <br />
+                <br />
 
             </form>
-            <input id="btn" type="button" value="Add Customer" @*onclick="SendData()*@ " ng-click="Add()" />  @*type="submit" --> full postback*@
+            <input id="btn" type="button" value="Add Customer" @*onclick="SendData()"*@ ng-click="Add()" />  @*type="submit" --> full postback*@
+            <input id="btn" type="button" value="Update Customer" @*onclick="SendData()"*@ ng-click="Update()" />
+            <input id="btn" type="button" value="Delete Customer" @*onclick="SendData()"*@ ng-click="Delete()" />
             @*@Html.ValidationSummary();*@
 
             <br />
@@ -78,6 +81,7 @@
                         <td>{{cust.CustomerCode}}</td>
                         <td>{{cust.CustomerName}}</td>
                         <td style="background-color:  {{cust.CustomerAmountColor}}">{{cust.CustomerAmount}}</td>
+                        <td><a ng-click="LoadByCode(cust.CustomerCode)" href="#">Select</a></td>
                     </tr>
                 </table>
             </div>
