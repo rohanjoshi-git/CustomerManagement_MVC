@@ -7,6 +7,7 @@ Functionality:
 - Store auth info in cookies
 - Auto color binding and loading of customers using AngularJS
 - Separate JS file to get data for all customers or a single customer (Code reusability using AngularJS)
+- Content negotiation using Customer WebAPI
 
 
 Technical specs:
@@ -16,3 +17,4 @@ Technical specs:
 - Forms Authentication
 - AngularJS
 - JSON
+- WebAPI
