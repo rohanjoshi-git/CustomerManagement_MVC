@@ -9,10 +9,24 @@ using CustomerManagement.Models;
 
 namespace CustomerManagement.Controllers
 {
+    public class Error
+    {
+        public List<string> Errors { get; set; }
+    }
+
+    public class ClientData
+    {
+        public bool isValid { get; set; }
+        public Object data { get; set; }
+    }
+
+
     public class CustomerController : ApiController
     {
+        ClientData objClientData = new ClientData();
+
         // Insert
-        public List<Customer> Post(Customer objCustomer)
+        public /*List<Customer>*/ Object Post(Customer objCustomer)  // Object - to avoid typecasting error (Error to Customers)
         {
             if (ModelState.IsValid)
             {
@@ -22,12 +36,30 @@ namespace CustomerManagement.Controllers
                 Dal.Customers.Add(objCustomer); // in memory
                 Dal.SaveChanges(); // physical commit
             }
+            else  // get all the errors in ModelState and put it in Error collection
+            {
+                var Err = new Error();
+                Err.Errors = new List<string>(); // to avoid null reference in Err.Errors.Add
+                foreach (var modelState in ModelState)
+                {
+                    foreach (var error in modelState.Value.Errors)
+                    {
+                        Err.Errors.Add(error.ErrorMessage);
+                    }
+                }
+                objClientData.isValid = false;
+                objClientData.data = Err;
+                return objClientData;
+            }
 
             // fill the customers collections
             Dal.Dal dal = new Dal.Dal();
             List<Customer> customersColl = dal.Customers.ToList<Customer>();
 
-            return customersColl; // WebAOI will decide the content type on its own (HTML, JSON, JPEG...)
+            //return customersColl; // WebAPI will decide the content type on its own (HTML, JSON, JPEG...)
+            objClientData.isValid = true;
+            objClientData.data = customersColl;
+            return objClientData;  // WebAPI will decide the content type on its own (HTML, JSON, JPEG...)
         }
 
         // Select

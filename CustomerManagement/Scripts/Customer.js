@@ -12,6 +12,8 @@ function CustomerViewModel($scope, $http)  // $scope --> for scope management, $
 
     $scope.Customers = {};
 
+    $scope.Errors = {};
+
     $scope.$watch("Customers", function () {
         for (var x = 0; x < $scope.Customers.length; x++) {
 
@@ -42,18 +44,27 @@ function CustomerViewModel($scope, $http)  // $scope --> for scope management, $
     // Add new Customer
     $scope.Add = function () {
         // make a call to server to insert data
-        $http({ method: "POST", data: $scope.Customer, url: "/Api/Customer" /*"Submit"*/ }).then(function (successData, status, headers, config) {
-            // Load the collection of Customer
-            $scope.Customers = successData.data;
+        $http({ method: "POST", data: $scope.Customer, url: "/Api/Customer" /*"Submit"*/ })
+            .then(function (successData, status, headers, config) {
+                if (successData.data.isValid)  // 'isValid' should match with ClientData property (isValid) being sent from controller
+                {   
+                    // Load the collection of Customer
+                    $scope.Customers = successData.data.data;
 
-            // Clear text boxes
-            $scope.Customer =
+                    // Clear text boxes
+                    $scope.Customer =
+                        {
+                            "CustomerCode": "",
+                            "CustomerName": "",
+                            "CustomerAmount": "",
+                            "CustomerAmountColor": ""
+                        };
+                }
+                else
                 {
-                    "CustomerCode": "",
-                    "CustomerName": "",
-                    "CustomerAmount": "",
-                    "CustomerAmountColor": ""
-                };
+                    $scope.Errors = successData.data.data.Errors; // 'Errors' should match with property (Errors) being returned from controller
+                }
+            
         });
     }
 
